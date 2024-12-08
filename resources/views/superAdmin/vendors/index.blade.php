@@ -54,7 +54,7 @@
                                         <td>
                                             <!-- <a href="{{ url('/vendors/' . $vendor->id) }}" class="btn btn-info btn-sm">View</a> -->
                                             <a href="{{ route('vendors.edit' , $vendor->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteVendor({{ $vendor->id }})">Delete</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteVendor('{{ $vendor->id }}')">Delete</button>
                                         </td>
                                     </tr>
                                 @endforeach
