@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SuperAdminController;
+use App\Http\Controllers\Admin\VendorController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,7 +20,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
-    // Route::resource('superadmin/vendors', VendorController::class);
+    Route::resource('superadmin/vendors', VendorController::class);
 });
 
 // Route::middleware(['auth', 'role:vendor'])->group(function () {
