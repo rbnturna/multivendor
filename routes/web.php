@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Vendor\ProductController;
+use App\Http\Controllers\Vendor\TagController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -27,7 +28,9 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
 Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
     Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
     Route::resource('vendor/products', ProductController::class);
+    Route::resource('vendor/tags', TagController::class);
 });
+
 
 // Route::middleware(['auth', 'role:admin'])->group(function () {
 //     Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports');
