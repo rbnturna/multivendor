@@ -9,8 +9,8 @@
         <div class="form-group">
             <label for="parent_id">Parent Category</label>
             <select name="parent_id" id="parent_id" class="form-control">
-                <option value="{{ auth()->user()->id }}" {{ $category->parent_id == auth()->user()->id ? 'selected' : '' }}>
-                    {{ auth()->user()->name }} (You)
+                <option value="{{ $category->parent_id }}" {{ $category->parent_id ==  $category->parent_id ? 'selected' : '' }}>
+                    {{  $category->parent_id->name }} (You)
                 </option>
             </select>
         </div>

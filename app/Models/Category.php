@@ -17,13 +17,10 @@ class Category extends Model
         'image',
     ];
 
-    // Define relationship for parent category
     public function parent()
     {
-        return $this->belongsTo(User::class, 'parent_id');
+        return $this->belongsTo(Category::class, 'parent_id');
     }
-
-    // Define relationship for subcategories
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');

@@ -34,12 +34,9 @@ class CategoryController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('categories', 'public');
         }
-       // $userId = auth()->id();
-        $userId = auth()->user()->id;
 
         Category::create([
-            //'parent_id' => $request->parent_id,
-            'parent_id' =>$userId,
+            'parent_id' => $request->parent_id,
             'name' => $request->name,
             'slug' => $request->slug ?? Str::slug($request->name),
             'description' => $request->description,
@@ -93,7 +90,7 @@ class CategoryController extends Controller
         ]);
 
         $category->update([
-            'parent_id' => auth()->user()->id, // Ensure parent_id is the logged-in user
+            'parent_id' => $category->id, // Ensure parent_id is the logged-in user
             'name' => $request->name,
             'slug' => $request->slug,
             'description' => $request->description,
