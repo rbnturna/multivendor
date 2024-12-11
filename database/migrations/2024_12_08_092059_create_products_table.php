@@ -42,6 +42,30 @@ return new class extends Migration
             $table->timestamps(); // Created at and updated at timestamps
             $table->softDeletes(); 
         });
+
+        Schema::create('attributes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        Schema::create('attribute_values', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('attribute_id')->constrained('attributes')->onDelete('cascade');
+            $table->string('value');
+            $table->timestamps();
+        });
+
+        Schema::create('variations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->decimal('price', 10, 2);
+            $table->decimal('sale_price', 10, 2)->nullable(); // Sale price for the variation
+            $table->string('image')->nullable(); // Image for the variation
+            $table->integer('stock_quantity')->default(0); // Stock quantity
+            $table->text('attributes')->nullable(); // JSON to store attribute-value pairs
+            $table->timestamps();
+        });
     }
 
     /**
@@ -49,6 +73,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('variations');
+        Schema::dropIfExists('attribute_values');
+        Schema::dropIfExists('attributes');
         Schema::dropIfExists('products');
     }
 };

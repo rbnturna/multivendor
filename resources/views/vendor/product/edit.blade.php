@@ -109,7 +109,75 @@
                             </div>
                         </div>
                     </div>
+                
+                    <!--  -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="header-title">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h4 class="card-title">Product Variation</h4>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                     <a href="{{ route('vendor.product.variations.create',$product->id) }}" class="btn btn-primary float-end">Create Variation</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                
+                                <table class="table table-sm mt-4">
+                                    @foreach($product->variations as $variation)
+                                    
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Attributes</th>
+                                                <th>Price</th>
+                                                <th>Sale Price</th>
+                                                <th>Stock</th>
+                                                <th>Image</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ $product->name }}</td>
+                                                <td>
+                                                    @foreach($variation->attributes as $k=>$v)
+                                                        <span class="badge bg-primary p-1">{{$k}}:{{$v}}</span>
+                                                    @endforeach
+                                                </td>
+                                                <td>{{ $variation->price }}</td>
+                                                <td>{{ $variation->sale_price ?? 'N/A' }}</td>
+                                                <td>{{ $variation->stock_quantity }}</td>
+                                                <td>
+                                                    @if($variation->image)
+                                                        <img src="{{ asset('storage/' . $variation->image) }}" alt="Variation Image" style="width: 50px; height: 50px;">
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{route('vendor.product.variations.edit', [$product->id, $variation->id]) }}" class="btn btn-light btn-sm"><i class="bi bi-pencil-fill text-warning fs-5"></i></a>
+                                                    <button class="btn btn-light btn-sm" onclick="deleteproduct('{{ $variation->id }}')"><i class="bi bi-x-circle text-danger fs-5"></i></button>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    
+                                    @endforeach
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                     <!--  -->
                 </div>
+
+
+
                 <div class="col-xl-4 col-lg-4">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
@@ -190,6 +258,9 @@
                     </div>
                 </div>
 
+
+               
+
                 <div class="col-4">
                     <button type="submit" class="btn btn-lg btn-primary mb-2">Submit</button>
                 </div>
@@ -212,5 +283,26 @@
 @endpush
 
 @push('scripts')
+<script>
+    // $(document).ready(function () {
+    //     $('#productTable').DataTable({
+    //         // DataTables initialization options
+    //         responsive: true,
+    //         autoWidth: false,
+    //         lengthChange: true,
+    //         pageLength: 10,
+    //         ordering: true,
+    //         columnDefs: [
+    //             { orderable: false, targets: [6] } // Disable ordering for Actions column
+    //         ]
+    //     });
+    // });
 
+    function deleteproduct(productId) {
+        if (confirm("Are you sure you want to delete this Variant?")) {
+            // Replace with your delete endpoint logic
+            alert("Variant " + productId + " deleted successfully.");
+        }
+    }
+</script>
 @endpush

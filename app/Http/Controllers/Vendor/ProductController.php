@@ -86,8 +86,10 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified product.
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
+        // dd($id);
+        $product = Product::with('variations')->find($id);
         return view('vendor.product.edit',compact('product'));
     }
 
@@ -97,6 +99,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+        
 
         $request->validate([
             'name' => 'required|string|max:255',

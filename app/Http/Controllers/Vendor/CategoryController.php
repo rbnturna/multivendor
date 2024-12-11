@@ -17,7 +17,7 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $categories = Category::whereNull('parent_id')->get();
+        $categories = Category::all();
         return view('vendor.category.create', compact('categories'));
     }
 
@@ -48,7 +48,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $categories = Category::whereNull('parent_id')->where('id', '!=', $category->id)->get();
+        $categories = Category::all();
         return view('vendor.category.edit', compact('category', 'categories'));
     }
 

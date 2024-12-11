@@ -9,9 +9,11 @@
         <div class="form-group">
             <label for="parent_id">Parent Category</label>
             <select name="parent_id" id="parent_id" class="form-control">
-                <option value="{{ $category->parent_id }}" {{ $category->parent_id ==  $category->parent_id ? 'selected' : '' }}>
-                    {{  $category->parent_id->name }} (You)
-                </option>
+                    <option value="" >Select Category</option>
+                @foreach($categories as $parent)
+                    <option value="{{ $parent->id }}" {{ $category->parent_id ==  $parent->id ? 'selected' : '' }} >{{ $parent->name }}</option>
+                @endforeach
+               
             </select>
         </div>
         

@@ -55,4 +55,9 @@ class Product extends Model
         'available_from' => 'datetime',
         'available_until' => 'datetime',
     ];
+
+    public function variations()
+    {
+        return $this->hasMany(Variation::class);
+    }
 }
