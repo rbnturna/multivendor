@@ -46,7 +46,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($product->is_featured === 1)
+                                        @if($product->is_featured)
                                         <span class="badge text-warning"><i class="bi bi-star-fill"></i></span>
                                         @else
                                         <span class="badge text-warning"><i class="bi bi-star"></i></span>

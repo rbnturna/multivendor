@@ -160,30 +160,31 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Product Categories:</label>
-                                <select
-                                    name="category"
-                                    class="selectpicker form-control"
-                                    data-style="py-0"
-                                    required>
-                                    <option value="" disabled selected>Select Category</option>
-                                    <option value="electronics">Electronics</option>
-                                    <option value="clothing">Clothing & Apparel</option>
-                                    <option value="home_kitchen">Home & Kitchen</option>
-                                    <option value="beauty">Beauty & Personal Care</option>
-                                    <option value="books_stationery">Books & Stationery</option>
-                                    <option value="sports">Sports & Outdoor</option>
-                                    <option value="toys">Toys & Games</option>
-                                    <option value="health">Health & Wellness</option>
-                                    <option value="automotive">Automotive</option>
-                                    <option value="groceries">Groceries & Essentials</option>
-                                    <option value="jewelry">Jewelry</option>
-                                    <option value="digital">Digital Products</option>
-                                    <option value="pet_supplies">Pet Supplies</option>
-                                    <option value="gifts">Gifts & Occasions</option>
-                                    <option value="art_collectibles">Art & Collectibles</option>
+                                <select name="categories[]" id="select-field-caterory" multiple  class=" form-control">
+                                    @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ isset($product) && $product->categories->contains($category->id) ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                    @endforeach
                                 </select>
                             </div>
-
+                            <div class="form-group">
+                                <label class="form-label">Product Tags:</label>
+                                    <select name="tags[]" id="select-field-tags"  multiple class=" form-control">
+                                        @foreach($tags as $tag)
+                                        <option value="{{ $tag->id }}" {{ isset($product) && $product->tags->contains($tag->id) ? 'selected' : '' }}>
+                                            {{ $tag->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Featured:</label>
+                                <div class="form-check form-switch form-check-inline">
+                                    <input class="form-check-input" name="is_featured" type="checkbox" id="switch2"  {{ isset($product) && $product->is_featured?' checked':''}} />
+                                    <label class="form-check-label pl-2" for="switch2">Make Featured Product</label>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -208,8 +209,18 @@
             color: #007bff;
         }
     </style> -->
+    
 @endpush
 
 @push('scripts')
-
+<script>
+      $(document).ready(function(){
+        $( '#select-field-caterory' ).select2( {
+            theme: 'bootstrap-5'
+        } );
+        $( '#select-field-tags' ).select2( {
+            theme: 'bootstrap-5'
+        } );
+    });
+</script>
 @endpush

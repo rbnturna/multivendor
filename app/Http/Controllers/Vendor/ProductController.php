@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -15,8 +17,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return view('vendor.product.index', compact('products'));
+        $products = Product::with('categories')->get();
+        $categories = Category::all();
+        return view('vendor.product.index', compact('products','categories'));
         // return response()->json($products);
     }
 
@@ -25,7 +28,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('vendor.product.create');
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('vendor.product.create',compact('tags','categories'));
         // Return a view for creating products (if using Blade).
     }
 
@@ -43,6 +48,10 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'short_description' => 'nullable|string|max:255',
             'stock' => 'nullable|integer',
+            'categories' => 'array',
+            'categories.*' => 'exists:categories,id',
+            'tags' => 'array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
         // Handle main image upload
@@ -70,6 +79,9 @@ class ProductController extends Controller
             'is_active' => $request->has('is_active'),
             'is_featured' => $request->has('is_featured'),
         ]);
+
+        $product->categories()->sync($request->categories);
+        $product->tags()->sync($request->tags);
         return redirect()->route('vendor.products.index')->with('success', 'Product created successfully!');
         // return response()->json(['message' => 'Product created successfully', 'product' => $product]);
     }
@@ -90,7 +102,9 @@ class ProductController extends Controller
     {
         // dd($id);
         $product = Product::with('variations')->find($id);
-        return view('vendor.product.edit',compact('product'));
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('vendor.product.edit',compact('product','categories','tags'));
     }
 
     /**
@@ -110,6 +124,10 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'short_description' => 'nullable|string|max:255',
             'stock' => 'nullable|integer',
+            'categories' => 'array',
+            'categories.*' => 'exists:categories,id',
+            'tags' => 'array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
         // Handle main image upload
@@ -144,7 +162,9 @@ class ProductController extends Controller
             'is_active' => $request->has('is_active'),
             'is_featured' => $request->has('is_featured'),
         ]);
-        return redirect()->route('vendor.products.index')->with('success', 'Product updated successfully!');
+        $product->categories()->sync($request->categories);
+        $product->tags()->sync($request->tags);
+        return redirect()->route('vendor.products.edit',$id )->with('success', 'Product updated successfully!');
         //return response()->json(['message' => 'Product updated successfully', 'product' => $product]);
     }
 
@@ -154,7 +174,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-
+        $product->categories()->detach(); 
         // Delete images
         Storage::disk('public')->delete($product->image);
         foreach (json_decode($product->gallery_images, true) as $galleryImage) {
@@ -164,5 +184,21 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('vendor.products.index')->with('success', 'Product deleted successfully!');
         //return response()->json(['message' => 'Product deleted successfully']);
+    }
+
+    public function getVariations($id)
+    {
+        $product = Product::with('variations')->findOrFail($id);
+
+        // Return the variations with attributes as JSON
+        return response()->json($product->variations->map(function ($variation) {
+            return [
+                'id' => $variation->id,
+                'attributes' => $variation->attributes, // Already cast to array in the model
+                'price' => $variation->price,
+                'sale_price' => $variation->sale_price,
+                'stock_quantity' => $variation->stock_quantity,
+            ];
+        }));
     }
 }

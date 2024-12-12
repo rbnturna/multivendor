@@ -9,6 +9,7 @@ use App\Models\AttributeValue;
 use App\Models\Variation;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Storage;
 
 class ProductVariationController extends Controller
 {
@@ -38,6 +39,17 @@ class ProductVariationController extends Controller
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('variations', 'public');
         }
+
+        if (is_object($data) && isset($data->attributes) && is_array($data->attributes)) {
+            $data->attributes = array_filter($data->attributes, function($val) {
+                return $val !== null && $val !== '';
+            });
+        } elseif (is_array($data) && isset($data['attributes']) && is_array($data['attributes'])) {
+            $data['attributes'] = array_filter($data['attributes'], function($val) {
+                return $val !== null && $val !== '';
+            });
+        }
+        // dd($data['attributes']);
         $data['product_id'] = $id;
 
         $variation = new Variation($data);
@@ -71,6 +83,16 @@ class ProductVariationController extends Controller
                 Storage::disk('public')->delete($variation->image);
             }
             $data['image'] = $request->file('image')->store('variations', 'public');
+        }
+
+        if (is_object($data) && isset($data->attributes) && is_array($data->attributes)) {
+            $data->attributes = array_filter($data->attributes, function($val) {
+                return $val !== null && $val !== '';
+            });
+        } elseif (is_array($data) && isset($data['attributes']) && is_array($data['attributes'])) {
+            $data['attributes'] = array_filter($data['attributes'], function($val) {
+                return $val !== null && $val !== '';
+            });
         }
 
         $variation->update($data);
@@ -111,8 +133,11 @@ class ProductVariationController extends Controller
 
     public function destroy($id)
     {
-        $variation = Variation::findOrFail($id);
+        $variation = Variation::find($id);
 
+        if(empty($variation)){
+            return response()->json('Variant Not Found!',404); 
+        }
         // Delete images
         Storage::disk('public')->delete($variation->image);
         // foreach (json_decode($variation->image, true) as $galleryImage) {
@@ -120,7 +145,9 @@ class ProductVariationController extends Controller
         // }
 
         $variation->delete();
-        return redirect()->route('vendor.products.edit',$id)->with('success', 'Variant deleted successfully!');
+        
+        return response()->json('Variant deleted successfully!');
+        // return redirect()->route('vendor.products.edit',$id)->with('success', 'Variant deleted successfully!');
         //return response()->json(['message' => 'Product deleted successfully']);
     }
 

@@ -1,4 +1,4 @@
-@extends('superAdmin.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('content')
 <div class="conatiner-fluid content-inner mt-n5 py-0">

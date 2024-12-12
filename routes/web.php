@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SuperAdminController;
+use App\Http\Controllers\Vendor\VendorHomeController;
+use App\Http\Controllers\Vendor\OrderController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\TagController;
@@ -28,16 +30,23 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
-    Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
+    Route::get('/vendor/dashboard', [VendorHomeController::class, 'index'])->name('vendor.dashboard');
     Route::resource('vendor/products', ProductController::class);
     Route::resource('vendor/tags', TagController::class);
     Route::resource('vendor/category', CategoryController::class);
+    Route::resource('orders', OrderController::class);
 
-    Route::get('vendor/product/variations/create/{id}', [ProductVariationController::class, 'createByProduct'])->name('product.variations.create');
-    Route::post('vendor/product/variations/{id}', [ProductVariationController::class, 'storeByProduct'])->name('product.variations.store');
-    Route::get('vendor/product/variations/edit/{id}/{variationId}', [ProductVariationController::class, 'editByProduct'])->name('product.variations.edit');
-    Route::post('vendor/product/variations/update/{id}/{variationId}', [ProductVariationController::class, 'updateByProduct'])->name('product.variations.update');
-    Route::delete('vendor/product/variations/{variationId}', [ProductVariationController::class, 'destroy'])->name('product.variations.destroy');
+    Route::get('vendor/orders/canceled', [OrderController::class, 'canceledOrders'])->name('orders.canceled');
+    Route::get('vendor/orders/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
+
+    
+    Route::get('vendor/api/products/{id}/variations', [ProductController::class, 'getVariations'])->name('api.products.variations');
+
+    Route::get('vendor/products/variations/create/{id}', [ProductVariationController::class, 'createByProduct'])->name('products.variations.create');
+    Route::post('vendor/products/variations/{id}', [ProductVariationController::class, 'storeByProduct'])->name('products.variations.store');
+    Route::get('vendor/products/variations/edit/{id}/{variationId}', [ProductVariationController::class, 'editByProduct'])->name('products.variations.edit');
+    Route::post('vendor/products/variations/update/{id}/{variationId}', [ProductVariationController::class, 'updateByProduct'])->name('products.variations.update');
+    Route::delete('vendor/products/variations/{variationId}', [ProductVariationController::class, 'destroy'])->name('products.variations.destroy');
 
     Route::get('vendor/variations', [ProductVariationController::class, 'index'])->name('variations.index');
     Route::get('vendor/variations/create', [ProductVariationController::class, 'create'])->name('variations.create');

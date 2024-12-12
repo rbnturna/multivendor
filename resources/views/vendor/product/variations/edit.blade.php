@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <form action="{{ route('vendor.product.variations.update', [$id, $variation->id]) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('vendor.products.variations.update', [$id, $variation->id]) }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
             <label for="price" class="form-label">Price</label>
@@ -45,6 +45,8 @@
                 <div class="mb-2">
                     <label>{{ $attribute->name }}</label>
                     <select name="attributes[{{ $attribute->name }}]" class="form-select">
+                        <option value="">Select Varient</option>
+
                         @foreach($attribute->values as $value)
                             <option value="{{ $value->value }}" {{ old('attributes.' . $attribute->name, $variation->attributes[$attribute->name] ?? '') == $value->value ? 'selected' : '' }}>
                                 {{ $value->value }}

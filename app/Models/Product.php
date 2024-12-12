@@ -60,4 +60,14 @@ class Product extends Model
     {
         return $this->hasMany(Variation::class);
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_product');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'product_tag');
+    }
 }

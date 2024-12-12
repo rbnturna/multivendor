@@ -119,7 +119,7 @@
                                         <h4 class="card-title">Product Variation</h4>
                                     </div>
                                     <div class="col-6 text-end">
-                                     <a href="{{ route('vendor.product.variations.create',$product->id) }}" class="btn btn-primary float-end">Create Variation</a>
+                                     <a href="{{ route('vendor.products.variations.create',$product->id) }}" class="btn btn-primary float-end">Create Variation</a>
                                     </div>
                                 </div>
 
@@ -129,30 +129,24 @@
                             <div class="table-responsive">
                                 
                                 <table class="table table-sm mt-4">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th>Product</th> -->
+                                            <th>Image</th>
+
+                                            <th>Attributes</th>
+                                            <th>Price</th>
+                                            <th>Sale Price</th>
+                                            <th>Stock</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                     @foreach($product->variations as $variation)
                                     
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Attributes</th>
-                                                <th>Price</th>
-                                                <th>Sale Price</th>
-                                                <th>Stock</th>
-                                                <th>Image</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>{{ $product->name }}</td>
-                                                <td>
-                                                    @foreach($variation->attributes as $k=>$v)
-                                                        <span class="badge bg-primary p-1">{{$k}}:{{$v}}</span>
-                                                    @endforeach
-                                                </td>
-                                                <td>{{ $variation->price }}</td>
-                                                <td>{{ $variation->sale_price ?? 'N/A' }}</td>
-                                                <td>{{ $variation->stock_quantity }}</td>
+                                        
+                                            <tr id="variation-row-{{$variation->id}}">
+                                                <!-- <td>{{ $product->name }}</td> -->
                                                 <td>
                                                     @if($variation->image)
                                                         <img src="{{ asset('storage/' . $variation->image) }}" alt="Variation Image" style="width: 50px; height: 50px;">
@@ -161,14 +155,23 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{route('vendor.product.variations.edit', [$product->id, $variation->id]) }}" class="btn btn-light btn-sm"><i class="bi bi-pencil-fill text-warning fs-5"></i></a>
+                                                    @foreach($variation->attributes as $k=>$v)
+                                                        <span class="badge bg-primary p-1">{{$k}}:{{$v}}</span>
+                                                    @endforeach
+                                                </td>
+                                                <td>{{ $variation->price }}</td>
+                                                <td>{{ $variation->sale_price ?? 'N/A' }}</td>
+                                                <td>{{ $variation->stock_quantity }}</td>
+                                                
+                                                <td>
+                                                    <a href="{{route('vendor.products.variations.edit', [$product->id, $variation->id]) }}" class="btn btn-light btn-sm"><i class="bi bi-pencil-fill text-warning fs-5"></i></a>
                                                     <button class="btn btn-light btn-sm" onclick="deleteproduct('{{ $variation->id }}')"><i class="bi bi-x-circle text-danger fs-5"></i></button>
                                                 </td>
 
                                             </tr>
+                                            
+                                            @endforeach
                                         </tbody>
-                                    
-                                    @endforeach
                                 </table>
                             </div>
                         </div>
@@ -200,7 +203,7 @@
                                         id="image"
                                         class="form-control"
                                         accept="image/*"
-                                        required />
+                                         />
                                 </div>
 
                                 <!-- Gallery Images Upload -->
@@ -229,30 +232,31 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Product Categories:</label>
-                                <select
-                                    name="category"
-                                    class="selectpicker form-control"
-                                    data-style="py-0"
-                                    required>
-                                    <option value="" disabled selected>Select Category</option>
-                                    <option value="electronics">Electronics</option>
-                                    <option value="clothing">Clothing & Apparel</option>
-                                    <option value="home_kitchen">Home & Kitchen</option>
-                                    <option value="beauty">Beauty & Personal Care</option>
-                                    <option value="books_stationery">Books & Stationery</option>
-                                    <option value="sports">Sports & Outdoor</option>
-                                    <option value="toys">Toys & Games</option>
-                                    <option value="health">Health & Wellness</option>
-                                    <option value="automotive">Automotive</option>
-                                    <option value="groceries">Groceries & Essentials</option>
-                                    <option value="jewelry">Jewelry</option>
-                                    <option value="digital">Digital Products</option>
-                                    <option value="pet_supplies">Pet Supplies</option>
-                                    <option value="gifts">Gifts & Occasions</option>
-                                    <option value="art_collectibles">Art & Collectibles</option>
+                                <select name="categories[]" id="select-field-caterory" multiple  class=" form-control">
+                                    @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ isset($product) && $product->categories->contains($category->id) ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                    @endforeach
                                 </select>
                             </div>
-
+                            <div class="form-group">
+                                <label class="form-label">Product Tags:</label>
+                                    <select name="tags[]" id="select-field-tags"  multiple class=" form-control">
+                                        @foreach($tags as $tag)
+                                        <option value="{{ $tag->id }}" {{ isset($product) && $product->tags->contains($tag->id) ? 'selected' : '' }}>
+                                            {{ $tag->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Featured:</label>
+                                <div class="form-check form-switch form-check-inline">
+                                    <input class="form-check-input" name="is_featured" type="checkbox" id="switch2"  {{ isset($product) && $product->is_featured?' checked':''}} />
+                                    <label class="form-check-label pl-2" for="switch2">Make Featured Product</label>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -297,11 +301,39 @@
     //         ]
     //     });
     // });
-
+    $(document).ready(function(){
+        $( '#select-field-caterory' ).select2( {
+            theme: 'bootstrap-5'
+        } );
+        $( '#select-field-tags' ).select2( {
+            theme: 'bootstrap-5'
+        } );
+    });
     function deleteproduct(productId) {
         if (confirm("Are you sure you want to delete this Variant?")) {
             // Replace with your delete endpoint logic
-            alert("Variant " + productId + " deleted successfully.");
+
+            $.ajax({
+                url: "{{ route('vendor.products.variations.destroy', '') }}/" + productId, // Add variation ID to the URL
+                type: "DELETE",
+                data: {
+                    _token: "{{ csrf_token() }}" // Pass the CSRF token
+                },
+                success: function(response) {
+                    console.log(response);
+                    
+                        alert(response);
+                        // Optionally remove the deleted row or refresh the table
+                        $("#variation-row-" + productId).remove();
+                    // } else {
+                    //     alert("Failed to delete the variation. Please try again.");
+                    // }
+                },
+                error: function(xhr) {
+                    alert("An error occurred: " + xhr.responseText);
+                }
+            });
+            // alert("Variant " + productId + " deleted successfully.");
         }
     }
 </script>
