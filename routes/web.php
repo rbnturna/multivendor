@@ -10,9 +10,11 @@ use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\TagController;
 use App\Http\Controllers\Vendor\CategoryController;
 use App\Http\Controllers\Vendor\ProductVariationController;
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\Vendor\BlogController;
+use App\Http\Controllers\FrontendController;
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,6 +30,17 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
     Route::resource('superadmin/vendors', VendorController::class);
 });
+// Route::get('/vendor', function () {
+//     return view('vendor.home'); 
+// })->middleware(['auth', 'role:vendor'])->name('vendor.home');
+
+Route::get('/', [FrontendController::class, 'home'])->name('home');
+// Route::get('/product/{slug}', [FrontendController::class, 'index'])->name('home');
+Route::get('/product', [FrontendController::class, 'product'])->name('shop');
+Route::get('/detail', [FrontendController::class, 'detail'])->name('detail');
+Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
+Route::get('/checkout', [FrontendController::class, 'checkout'])->name('checkout');
+Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
 
 Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
     Route::get('/vendor/dashboard', [VendorHomeController::class, 'index'])->name('vendor.dashboard');
@@ -35,6 +48,7 @@ Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
     Route::resource('vendor/tags', TagController::class);
     Route::resource('vendor/category', CategoryController::class);
     Route::resource('orders', OrderController::class);
+    Route::resource('vendor/blogs', BlogController::class);
 
     Route::get('vendor/orders/canceled', [OrderController::class, 'canceledOrders'])->name('orders.canceled');
     Route::get('vendor/orders/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
