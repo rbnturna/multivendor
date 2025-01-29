@@ -71,9 +71,9 @@
         <circle cx="12.1747" cy="11.8891" r="2.63616" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></circle>
     </svg>
     </a>
-    <a class="btn btn-fixed-end btn-secondary btn-icon btn-dashboard z-3" href="../landing-pages/index.html" target="_blank">
+    <!-- <a class="btn btn-fixed-end btn-secondary btn-icon btn-dashboard z-3" href="../landing-pages/index.html" target="_blank">
     Landing Pages
-    </a>
+    </a> -->
     <!-- Wrapper End-->
     <!-- offcanvas start -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" data-bs-scroll="true" data-bs-backdrop="true"

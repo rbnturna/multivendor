@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Vendor\VendorHomeController;
 use App\Http\Controllers\Vendor\OrderController;
+use App\Http\Controllers\Vendor\PageController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\TagController;
@@ -59,6 +60,12 @@ Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
     Route::get('vendor/attributes/{attribute}/edit', [ProductVariationController::class, 'editAttribute'])->name('attributes.edit');
     Route::put('vendor/attributes/{attribute}', [ProductVariationController::class, 'updateAttribute'])->name('attributes.update');
     Route::delete('vendor/attributes/{attribute}', [ProductVariationController::class, 'destroyAttribute'])->name('attributes.destroy');
+
+
+    Route::resource('vendor/pages', PageController::class);
+    Route::get('vendor/pages/{page}', [PageController::class, 'show'])->name('pages.show');
+    Route::post('vendor/contact-submit', [PageController::class, 'handleContactForm'])->name('contact.submit');
+    Route::post('vendor/newsletter-submit', [PageController::class, 'handleNewsletterForm'])->name('newsletter.submit');
 
 });
 
