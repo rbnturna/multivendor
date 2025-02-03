@@ -37,6 +37,7 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
 Route::get('/', [FrontendController::class, 'home'])->name('home');
 // Route::get('/product/{slug}', [FrontendController::class, 'index'])->name('home');
 Route::get('/product', [FrontendController::class, 'product'])->name('shop');
+Route::get('/product/{slug}', [FrontendController::class, 'detail'])->name('product.detail'); // Fix here
 Route::get('/detail', [FrontendController::class, 'detail'])->name('detail');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
 Route::get('/checkout', [FrontendController::class, 'checkout'])->name('checkout');
