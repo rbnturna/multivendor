@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\superAdmin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class SuperAdminController extends Controller
      */
     public function index(Request $request): View
     {
-        return view('superAdmin.index', [
+        return view('superadmin.index', [
             'user' => 'sss',
         ]);
     }

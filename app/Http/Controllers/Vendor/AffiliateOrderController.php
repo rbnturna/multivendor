@@ -10,7 +10,7 @@ use App\Models\Variation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OrderController extends Controller
+class AffiliateOrderController extends Controller
 {
 
     public function canceledOrders()
@@ -19,7 +19,7 @@ class OrderController extends Controller
             ->with('items.variation.product')
             ->get();
 
-        return view('vendor.orders.canceled', compact('orders'));
+        return view('vendor.affiliate.orders.canceled', compact('orders'));
     }
 
     public function completedOrders()
@@ -28,18 +28,18 @@ class OrderController extends Controller
             ->with('items.variation.product')
             ->get();
 
-        return view('vendor.orders.completed', compact('orders'));
+        return view('vendor.affiliate.orders.completed', compact('orders'));
     }
     public function index()
     {
         $orders = Order::where('user_id', Auth::id())->with('items.variation.product')->get();
-        return view('vendor.orders.index', compact('orders'));
+        return view('vendor.affiliate.orders.index', compact('orders'));
     }
 
     public function create()
     {
         $products = Product::with('variations')->get(); // Fetch products with variations
-        return view('vendor.orders.create', compact('products'));
+        return view('vendor.affiliate.orders.create', compact('products'));
     }
 
     public function store(Request $request)
@@ -87,20 +87,20 @@ class OrderController extends Controller
             ]);
         }
 
-        return redirect()->route('vendor.orders.index')->with('success', 'Order created successfully!');
+        return redirect()->route('vendor.affiliate.orders.index')->with('success', 'Order created successfully!');
     }
 
     public function show($id)
     {
         $order = Order::where('id', $id)->where('user_id', Auth::id())->with('items.variation.product')->firstOrFail();
-        return view('vendor.orders.edit', compact('order'));
+        return view('vendor.affiliate.orders.edit', compact('order'));
     }
 
     public function edit($id)
     {
         $order = Order::where('id', $id)->where('user_id', Auth::id())->with('items.variation.product')->firstOrFail();
         $products = Product::with('variations')->get();
-        return view('vendor.orders.edit', compact('order', 'products'));
+        return view('vendor.affiliate.orders.edit', compact('order', 'products'));
     }
 
     public function update(Request $request, $id)
@@ -147,13 +147,13 @@ class OrderController extends Controller
 
         $order->update(['total_price' => $totalPrice]);
 
-        return redirect()->route('vendor.orders.index')->with('success', 'Order updated successfully!');
+        return redirect()->route('vendor.affiliate.orders.index')->with('success', 'Order updated successfully!');
     }
 
     public function destroy($id)
     {
         $order = Order::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $order->delete();
-        return redirect()->route('vendor.orders.index')->with('success', 'Order deleted successfully!');
+        return redirect()->route('vendor.affiliate.orders.index')->with('success', 'Order deleted successfully!');
     }
 }

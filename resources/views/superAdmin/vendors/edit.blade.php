@@ -1,9 +1,9 @@
-@extends('superAdmin.layouts.app')
+@extends('superadmin.layouts.app')
 
 @section('content')
     <div class="conatiner-fluid content-inner mt-n5 py-0">
         <div>
-            <form action="{{ route('vendors.update', $vendor->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('superadmin.update', $vendor->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -377,7 +377,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         Add New User
                                     </button>
-                                    <a href="{{ route('vendors.index') }}" class="btn btn-secondary">Cancel</a>
+                                    <a href="{{ route('superadmin.index') }}" class="btn btn-secondary">Cancel</a>
                                     
                                 </div>
                             </div>

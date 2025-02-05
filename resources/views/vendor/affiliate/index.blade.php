@@ -1,4 +1,4 @@
-@extends('superadmin.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('content')
 <div class="conatiner-fluid content-inner mt-n5 py-0">
@@ -46,7 +46,7 @@
                                             </svg>
                                             </div>
                                             <div class="progress-detail">
-                                            <p  class="mb-2">Total Cost</p>
+                                            <p  class="mb-2">Monthly Sales</p>
                                             <h4 class="counter">$375K</h4>
                                             </div>
                                         </div>
@@ -61,7 +61,7 @@
                                             </svg>
                                             </div>
                                             <div class="progress-detail">
-                                            <p  class="mb-2">Revenue</p>
+                                            <p  class="mb-2">Monthly Profit</p>
                                             <h4 class="counter">$742K</h4>
                                             </div>
                                         </div>
@@ -76,7 +76,7 @@
                                             </svg>
                                             </div>
                                             <div class="progress-detail">
-                                            <p  class="mb-2">Net Income</p>
+                                            <p  class="mb-2">Today Sales</p>
                                             <h4 class="counter">$150K</h4>
                                             </div>
                                         </div>
@@ -91,13 +91,13 @@
                                             </svg>
                                             </div>
                                             <div class="progress-detail">
-                                            <p  class="mb-2">Today</p>
+                                            <p  class="mb-2">Today Profit</p>
                                             <h4 class="counter">$4600</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1300">
+                                <!-- <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1300">
                                     <div class="card-body">
                                         <div class="progress-widget">
                                             <div id="circle-progress-07" class="text-center circle-progress-01 circle-progress circle-progress-primary" data-min-value="0" data-max-value="100" data-value="30" data-type="percent">
@@ -111,7 +111,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </li>
+                                </li> -->
                             </ul>
                             <div class="swiper-button swiper-button-next"></div>
                             <div class="swiper-button swiper-button-prev"></div>
@@ -124,8 +124,8 @@
                             <div class="card" data-aos="fade-up" data-aos-delay="800">
                             <div class="flex-wrap card-header d-flex justify-content-between align-items-center">
                                 <div class="header-title">
-                                    <h4 class="card-title">$855.8K</h4>
-                                    <p class="mb-0">Gross Sales</p>          
+                                    <h4 class="card-title">$855.8K | $200K</h4>
+                                    <p class="mb-0">Sales | Profits</p>          
                                 </div>
                                 <div class="d-flex align-items-center align-self-center">
                                     <div class="d-flex align-items-center text-primary">
@@ -145,7 +145,7 @@
                                         </g>
                                         </svg>
                                         <div class="ms-2">
-                                        <span class="text-gray">Cost</span>
+                                        <span class="text-gray">Profit</span>
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
                             <div class="card" data-aos="fade-up" data-aos-delay="900">
                             <div class="flex-wrap card-header d-flex justify-content-between">
                                 <div class="header-title">
-                                    <h4 class="card-title">Earnings</h4>            
+                                    <h4 class="card-title">Category Wise Sales</h4>            
                                 </div>   
                                 <div class="dropdown">
                                     <a href="#" class="text-gray dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -187,27 +187,52 @@
                                     <div id="myChart" class="col-md-8 col-lg-8 myChart"></div>
                                     <div class="d-grid gap col-md-4 col-lg-4">
                                         <div class="d-flex align-items-start">
-                                        <svg class="mt-2 icon-14" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#3a57e8">
-                                            <g>
-                                                <circle cx="12" cy="12" r="8" fill="#3a57e8"></circle>
-                                            </g>
-                                        </svg>
-                                        <div class="ms-3">
-                                            <span class="text-gray">Fashion</span>
-                                            <h6>251K</h6>
+                                            <svg class="mt-2 icon-14" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#3a57e8">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="#3a57e8"></circle>
+                                                </g>
+                                            </svg>
+                                            <div class="ms-3">
+                                                <span class="text-gray">Fashion</span>
+                                                <h6>251K</h6>
+                                            </div>
                                         </div>
+
+                                        <div class="d-flex align-items-start">
+                                            <svg class="mt-2 icon-14" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#4bc7d2">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="#4bc7d2"></circle>
+                                                </g>
+                                            </svg>
+                                            <div class="ms-3">
+                                                <span class="text-gray">Accessories</span>
+                                                <h6>176K</h6>
+                                            </div>
                                         </div>
                                         <div class="d-flex align-items-start">
-                                        <svg class="mt-2 icon-14" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#4bc7d2">
-                                            <g>
-                                                <circle cx="12" cy="12" r="8" fill="#4bc7d2"></circle>
-                                            </g>
-                                        </svg>
-                                        <div class="ms-3">
-                                            <span class="text-gray">Accessories</span>
-                                            <h6>176K</h6>
+                                            <svg class="mt-2 icon-14" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#4bc7d2">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="#2bc8d2"></circle>
+                                                </g>
+                                            </svg>
+                                            <div class="ms-3">
+                                                <span class="text-gray">Luxury</span>
+                                                <h6>176K</h6>
+                                            </div>
                                         </div>
+                                        <div class="d-flex align-items-start">
+                                            <svg class="mt-2 icon-14" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#4bc7d2">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="#2bc8d2"></circle>
+                                                </g>
+                                            </svg>
+                                            <div class="ms-3">
+                                                <span class="text-gray">Others</span>
+                                                <h6>176K</h6>
+                                            </div>
                                         </div>
+                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +264,7 @@
                             <div class="overflow-hidden card" data-aos="fade-up" data-aos-delay="600">
                             <div class="flex-wrap card-header d-flex justify-content-between">
                                 <div class="header-title">
-                                    <h4 class="mb-2 card-title">Enterprise Clients</h4>
+                                    <h4 class="mb-2 card-title">New Customers</h4>
                                     <p class="mb-0">
                                         <svg class ="me-2 text-primary icon-24" width="24"  viewBox="0 0 24 24">
                                         <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
@@ -572,6 +597,15 @@
 @endsection
 
 @push('styles')
+<style>
+    .card-slide .card-body{
+        padding:15px !important;
+    }
+    .card-slide .card-slie-arrow {
+    left: 35px;
+    top: 32px;
+    }
+</style>
     <!-- <style>
         body {
             background-color: #f8f9fa;

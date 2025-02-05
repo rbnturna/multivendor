@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\superAdmin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class VendorController extends Controller
     public function index()
     {
         $vendors = Vendor::all(); // Fetch all vendors
-        return view('superAdmin.vendors.index', compact('vendors')); // Pass to a view
+        return view('superadmin.vendors.index', compact('vendors')); // Pass to a view
     }
 
     /**
@@ -23,7 +23,7 @@ class VendorController extends Controller
      */
     public function create()
     {
-        return view('superAdmin.vendors.create'); // Return the create form
+        return view('superadmin.vendors.create'); // Return the create form
     }
 
     /**
@@ -92,7 +92,7 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-        return view('superAdmin.vendors.show', compact('vendor')); // Return a detailed view
+        return view('superadmin.vendors.show', compact('vendor')); // Return a detailed view
     }
 
     /**
@@ -100,7 +100,7 @@ class VendorController extends Controller
      */
     public function edit(Vendor $vendor)
     {
-        return view('superAdmin.vendors.edit', compact('vendor')); // Return the edit form
+        return view('superadmin.vendors.edit', compact('vendor')); // Return the edit form
     }
 
     /**

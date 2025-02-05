@@ -9,7 +9,7 @@ if (document.querySelectorAll("#apex-basic").length) {
               enabled: !1
           }
       },
-      colors: ["#3a57e8"],
+      colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
       series: [{
           name: "Desktops",
           data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
@@ -50,7 +50,7 @@ if (document.querySelectorAll("#apex-line-area").length) {
       stroke: {
           curve: "smooth"
       },
-      colors: ["#3a57e8", "#c03221"],
+      colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
       series: [{
           name: "series1",
           data: [31, 40, 28, 51, 42, 109, 100]
@@ -143,7 +143,7 @@ if (document.querySelectorAll("#apex-bar").length) {
       dataLabels: {
           enabled: !1
       },
-      colors: ["#3a57e8"],
+      colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
       series: [{
           data: [470, 540, 580, 690, 1100, 1200, 1380]
       }],
@@ -172,7 +172,7 @@ if (document.querySelectorAll("#apex-mixed-chart").length) {
               columnWidth: "50%"
           }
       },
-      colors: ["#c03221", "#1aa053", "#3a57e8"],
+      colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
       series: [{
           name: "Facebook",
           type: "column",
@@ -242,7 +242,7 @@ if (document.querySelectorAll("#apex-candlestick-chart").length) {
           height: 350,
           type: "candlestick"
       },
-      colors: ["#3a57e8", "#1aa053"],
+      colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
       series: [{
           data: [{
               x: new Date(15387786e5),

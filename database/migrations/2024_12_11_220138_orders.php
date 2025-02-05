@@ -15,13 +15,19 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('portal_id')->nullable();
+            $table->unsignedBigInteger('handler_id')->nullable();
             $table->string('status')->default('pending');
             $table->decimal('total_price', 10, 2);
             $table->text('shipping_address');
             $table->string('payment_method');
+            $table->tinyInteger('created_by')->default(0)->comment('0 = Customer, 1 = Vendor, 2 = Admin');
+            $table->tinyInteger('order_type')->default(0)->comment('0 =affliate, 1 = Vendor setup');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('portal_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('handler_id')->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
         });
 

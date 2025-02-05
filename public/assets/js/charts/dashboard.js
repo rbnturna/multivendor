@@ -2,28 +2,29 @@
   "use strict";
 if (document.querySelectorAll('#myChart').length) {
   const options = {
-    series: [55, 75],
+    series: [55,75,35,60],
     chart: {
     height: 230,
     type: 'radialBar',
   },
-  colors: ["#4bc7d2", "#3a57e8"],
+  colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
   plotOptions: {
     radialBar: {
       hollow: {
-          margin: 10,
+          margin: 0,
           size: "50%",
       },
       track: {
-          margin: 10,
-          strokeWidth: '50%',
+          margin: 0,
+          strokeWidth: '80%',
+          colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
       },
       dataLabels: {
-          show: false,
+          show: true,
       }
     }
   },
-  labels: ['Apples', 'Oranges'],
+  labels: ['Apples', 'Oranges','banana','ss'],
   };
   if(ApexCharts !== undefined) {
     const chart = new ApexCharts(document.querySelector("#myChart"), options);
@@ -52,7 +53,7 @@ if (document.querySelectorAll('#d-activity').length) {
             show:false
           }
       },
-      colors: ["#3a57e8", "#4bc7d2"],
+      colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
       plotOptions: {
         bar: {
           horizontal: false,
@@ -114,13 +115,14 @@ if (document.querySelectorAll('#d-activity').length) {
     })
   }
 if (document.querySelectorAll('#d-main').length) {
+  
   const options = {
       series: [{
-          name: 'total',
-          data: [94, 80, 94, 80, 94, 80, 94]
+          name: 'Sales',
+          data: [94, 80, 100, 94, 80, 94, 194]
       }, {
-          name: 'pipline',
-          data: [72, 60, 84, 60, 74, 60, 78]
+          name: 'Profit',
+          data: [10, 8, 12, 11, 7, 9, 19] 
       }],
       chart: {
           fontFamily: '"Inter", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
@@ -133,40 +135,41 @@ if (document.querySelectorAll('#d-main').length) {
               enabled: false,
           },
       },
-      colors: ["#3a57e8", "#4bc7d2"],
+      colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"], // Line colors updated
       dataLabels: {
           enabled: false
       },
       stroke: {
           curve: 'smooth',
           width: 3,
+          colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"], // Ensure stroke follows the new colors
       },
       yaxis: {
-        show: true,
-        labels: {
           show: true,
-          minWidth: 19,
-          maxWidth: 19,
-          style: {
-            colors: "#8A92A6",
+          labels: {
+              show: true,
+              minWidth: 19,
+              maxWidth: 19,
+              style: {
+                  colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
+              },
+              offsetX: -5,
           },
-          offsetX: -5,
-        },
       },
       legend: {
           show: false,
       },
       xaxis: {
           labels: {
-              minHeight:22,
-              maxHeight:22,
+              minHeight: 22,
+              maxHeight: 22,
               show: true,
               style: {
-                colors: "#8A92A6",
+                  colors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"],
               },
           },
           lines: {
-              show: false  //or just here to disable only x axis grids
+              show: false // Disables x-axis grid lines
           },
           categories: ["Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug"]
       },
@@ -178,17 +181,16 @@ if (document.querySelectorAll('#d-main').length) {
           gradient: {
               shade: 'dark',
               type: "vertical",
-              shadeIntensity: 0,
-              gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
-              inverseColors: true,
-              opacityFrom: .4,
-              opacityTo: .1,
-              stops: [0, 50, 80],
-              colors: ["#3a57e8", "#4bc7d2"]
+              shadeIntensity: 0.4,
+              gradientToColors: ["#3a57e8", "#4bc7d2", "#f4a261", "#e76f51", "#2a9d8f", "#264653", "#e9c46a"], // Match gradient with line colors
+              inverseColors: false,
+              opacityFrom: 0.4,
+              opacityTo: 0.1,
+              stops: [0, 50, 100],
           }
       },
       tooltip: {
-        enabled: true,
+          enabled: true,
       },
   };
 

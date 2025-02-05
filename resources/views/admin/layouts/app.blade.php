@@ -4,7 +4,7 @@
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <title>{{ config('app.name', 'Laravel') }}</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{asset('assets/images/favicon.ico')}}">
       
@@ -25,10 +25,6 @@
       
       <!-- RTL Css -->
       <link rel="stylesheet" href="{{asset('assets/css/rtl.min.css?v=5.0.0')}}">
-
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-
       @stack('styles') <!-- Allows for page-specific styles -->
       
   </head>
@@ -40,10 +36,10 @@
           </div>
       </div>    </div>
     <!-- loader END -->
-    @include('superadmin.layouts.sidebar')
+    @include('superAdmin.layouts.sidebar')
     
     <main class="main-content">
-        @include('superadmin.layouts.navigation')
+        @include('superAdmin.layouts.navigation')
         
         @yield('content')
         <!-- Footer Section Start -->
@@ -361,8 +357,6 @@
 
     <!-- App Script -->
     <script src="{{asset('assets/js/hope-ui.js')}}" defer></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
     @stack('scripts') <!-- Allows for page-specific scripts -->
     
   </body>

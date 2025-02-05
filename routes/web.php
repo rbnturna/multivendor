@@ -2,17 +2,35 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\SuperAdminController;
+
+use App\Http\Controllers\Vendor\AffiliateHomeController;
+use App\Http\Controllers\Vendor\AffiliateOrderController;
 use App\Http\Controllers\Vendor\VendorHomeController;
 use App\Http\Controllers\Vendor\OrderController;
 use App\Http\Controllers\Vendor\PageController;
-use App\Http\Controllers\Admin\VendorController;
+
+
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\TagController;
 use App\Http\Controllers\Vendor\CategoryController;
 use App\Http\Controllers\Vendor\ProductVariationController;
 use App\Http\Controllers\Vendor\BlogController;
+
 use App\Http\Controllers\FrontendController;
+
+
+// use App\Http\Controllers\SuperAdmin\SuperAdminController;
+
+use App\Http\Controllers\SuperAdmin\VendorController;
+use App\Http\Controllers\SuperAdmin\SuperAdminController;
+use App\Http\Controllers\SuperAdmin\AffiliateHomeController as SAffiliateHomeController;
+use App\Http\Controllers\SuperAdmin\OrderController as SOrderController;
+use App\Http\Controllers\SuperAdmin\PageController as SPageController;
+use App\Http\Controllers\SuperAdmin\ProductController as SProductController;
+use App\Http\Controllers\SuperAdmin\TagController as STagController;
+use App\Http\Controllers\SuperAdmin\CategoryController as SCategoryController;
+use App\Http\Controllers\SuperAdmin\ProductVariationController as SProductVariationController;
+use App\Http\Controllers\SuperAdmin\BlogController as SBlogController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -27,9 +45,47 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:superadmin'])->group(function () {
-    Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
+Route::middleware(['auth', 'role:superadmin'])->name('superadmin.')->group(function () {
+    // Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
     Route::resource('superadmin/vendors', VendorController::class);
+    Route::get('/superadmin/affiliate/dashboard', [SAffiliateHomeController::class, 'index'])->name('affiliate.dashboard');
+
+    Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('vendor.dashboard');
+    Route::resource('superadmin/products', SProductController::class);
+    Route::resource('superadmin/tags', STagController::class);
+    Route::resource('superadmin/category', SCategoryController::class);
+    Route::resource('superadmin/blogs', SBlogController::class);
+    
+    Route::get('superadmin/orders/canceled', [SOrderController::class, 'canceledOrders'])->name('orders.canceled');
+    Route::get('superadmin/orders/completed', [SOrderController::class, 'completedOrders'])->name('orders.completed');
+    Route::resource('superadmin/orders', SOrderController::class);
+    
+    Route::get('superadmin/api/products/{id}/variations', [SProductController::class, 'getVariations'])->name('api.products.variations');
+
+    Route::get('superadmin/products/variations/create/{id}', [SProductVariationController::class, 'createByProduct'])->name('products.variations.create');
+    Route::post('superadmin/products/variations/{id}', [SProductVariationController::class, 'storeByProduct'])->name('products.variations.store');
+    Route::get('superadmin/products/variations/edit/{id}/{variationId}', [SProductVariationController::class, 'editByProduct'])->name('products.variations.edit');
+    Route::post('superadmin/products/variations/update/{id}/{variationId}', [SProductVariationController::class, 'updateByProduct'])->name('products.variations.update');
+    Route::delete('superadmin/products/variations/{variationId}', [SProductVariationController::class, 'destroy'])->name('products.variations.destroy');
+
+    Route::get('superadmin/variations', [SProductVariationController::class, 'index'])->name('variations.index');
+    Route::get('superadmin/variations/create', [SProductVariationController::class, 'create'])->name('variations.create');
+    Route::post('superadmin/variations', [SProductVariationController::class, 'store'])->name('variations.store');
+    
+    // Attribute Management
+    Route::get('superadmin/attributes', [SProductVariationController::class, 'manageAttributes'])->name('attributes.index');
+    Route::get('superadmin/attributes/create', [SProductVariationController::class, 'createAttribute'])->name('attributes.create');
+    Route::post('superadmin/attributes', [SProductVariationController::class, 'storeAttribute'])->name('attributes.store');
+    Route::get('superadmin/attributes/{attribute}/edit', [SProductVariationController::class, 'editAttribute'])->name('attributes.edit');
+    Route::put('superadmin/attributes/{attribute}', [SProductVariationController::class, 'updateAttribute'])->name('attributes.update');
+    Route::delete('superadmin/attributes/{attribute}', [SProductVariationController::class, 'destroyAttribute'])->name('attributes.destroy');
+
+
+    Route::resource('superadmin/pages', SPageController::class);
+    Route::get('superadmin/pages/{page}', [SPageController::class, 'show'])->name('pages.show');
+    Route::post('superadmin/contact-submit', [SPageController::class, 'handleContactForm'])->name('contact.submit');
+    Route::post('superadmin/newsletter-submit', [SPageController::class, 'handleNewsletterForm'])->name('newsletter.submit');
+
 });
 // Route::get('/vendor', function () {
 //     return view('vendor.home'); 
@@ -44,15 +100,25 @@ Route::get('/checkout', [FrontendController::class, 'checkout'])->name('checkout
 Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
 
 Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
+    Route::get('/vendor/affiliate/dashboard', [AffiliateHomeController::class, 'index'])->name('affiliate.dashboard');
+    
+    Route::get('vendor/affiliate/orders/canceled', [AffiliateOrderController::class, 'canceledOrders'])->name('affiliate.orders.canceled');
+    Route::get('vendor/affiliate/orders/completed', [AffiliateOrderController::class, 'completedOrders'])->name('affiliate.orders.completed');
+    Route::name('affiliate.')->group(function () {
+    Route::resource('vendor/affiliate/orders', AffiliateOrderController::class);
+    });
+
+
     Route::get('/vendor/dashboard', [VendorHomeController::class, 'index'])->name('vendor.dashboard');
     Route::resource('vendor/products', ProductController::class);
     Route::resource('vendor/tags', TagController::class);
     Route::resource('vendor/category', CategoryController::class);
-    Route::resource('orders', OrderController::class);
     Route::resource('vendor/blogs', BlogController::class);
-
+    
     Route::get('vendor/orders/canceled', [OrderController::class, 'canceledOrders'])->name('orders.canceled');
     Route::get('vendor/orders/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
+    Route::resource('vendor/orders', OrderController::class);
+
 
     
     Route::get('vendor/api/products/{id}/variations', [ProductController::class, 'getVariations'])->name('api.products.variations');
@@ -84,8 +150,8 @@ Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
 });
 
 
-// Route::middleware(['auth', 'role:admin'])->group(function () {
-//     Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports');
+// Route::middleware(['auth', 'role:superadmin'])->group(function () {
+//     // Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports');
 // });
 
 // Route::group(['domain' => '{subdomain}.example.com'], function () {
