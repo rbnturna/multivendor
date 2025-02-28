@@ -93,7 +93,8 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::where('id', $id)->where('user_id', Auth::id())->with('items.variation.product')->firstOrFail();
-        return view('vendor.orders.edit', compact('order'));
+        $products = Product::with('variations')->get();
+        return view('vendor.orders.show', compact('order', 'products'));
     }
 
     public function edit($id)
@@ -106,6 +107,11 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
+            'name' => 'nullable|string',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string',
+            'additional_phone' => 'nullable|string',
+            'shipping_address' => 'required|string',
             'shipping_address' => 'required|string',
             'payment_method' => 'required|string',
             'status' => 'required|string',
@@ -117,6 +123,10 @@ class OrderController extends Controller
 
         $order = Order::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $order->update([
+            'name'=>$data['name'],
+            'email'=>$data['email'],
+            'phone'=>$data['phone'],
+            'additional_phone'=>$data['additional_phone'],
             'shipping_address' => $data['shipping_address'],
             'payment_method' => $data['payment_method'],
             'status' => $data['status'],

@@ -93,7 +93,8 @@ class AffiliateOrderController extends Controller
     public function show($id)
     {
         $order = Order::where('id', $id)->where('user_id', Auth::id())->with('items.variation.product')->firstOrFail();
-        return view('vendor.affiliate.orders.edit', compact('order'));
+        $products = Product::with('variations')->get();
+        return view('vendor.affiliate.orders.edit', compact('order','products'));
     }
 
     public function edit($id)

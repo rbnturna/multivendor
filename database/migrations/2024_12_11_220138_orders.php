@@ -19,6 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('handler_id')->nullable();
             $table->string('status')->default('pending');
             $table->decimal('total_price', 10, 2);
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('additional_phone')->nullable();
             $table->text('shipping_address');
             $table->string('payment_method');
             $table->tinyInteger('created_by')->default(0)->comment('0 = Customer, 1 = Vendor, 2 = Admin');
