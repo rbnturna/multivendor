@@ -14,9 +14,14 @@ use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\TagController;
 use App\Http\Controllers\Vendor\CategoryController;
 use App\Http\Controllers\Vendor\ProductVariationController;
-use App\Http\Controllers\Vendor\BlogController;
+use App\Http\Controllers\Vendor\BlogController as VendorBlogController;
+use App\Http\Controllers\Vendor\BlogCategoryController;
+use App\Http\Controllers\Vendor\BlogTagController;
+
 
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\BlogController;
 
 
 // use App\Http\Controllers\SuperAdmin\SuperAdminController;
@@ -97,8 +102,21 @@ Route::get('/product', [FrontendController::class, 'product'])->name('shop');
 Route::get('/product/{slug}', [FrontendController::class, 'detail'])->name('product.detail'); // Fix here
 Route::get('/detail', [FrontendController::class, 'detail'])->name('detail');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
-Route::get('/checkout', [FrontendController::class, 'checkout'])->name('checkout');
-Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
+// Route::get('/checkout', [FrontendController::class, 'checkout'])->name('checkout');
+Route::get('/checkout', [CartController::class, 'showCheckout'])->name('checkout.show');
+
+// Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
+Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.show');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
+Route::put('/cart/{id}', [CartController::class, 'updateCart'])->name('cart.update');
+Route::delete('/cart/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::get('/order-success/{order}', [CartController::class, 'showOrderSuccess'])->name('order.success');
+
+
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 
 Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
     Route::get('/vendor/affiliate/dashboard', [AffiliateHomeController::class, 'index'])->name('affiliate.dashboard');
@@ -114,7 +132,10 @@ Route::middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
     Route::resource('vendor/products', ProductController::class);
     Route::resource('vendor/tags', TagController::class);
     Route::resource('vendor/category', CategoryController::class);
-    Route::resource('vendor/blogs', BlogController::class);
+    Route::resource('vendor/blogs', VendorBlogController::class);
+    Route::post('vendor/blog/upload', [VendorBlogController::class, 'upload'])->name('blog.upload');
+    Route::resource('vendor/blogcategories', BlogCategoryController::class);
+    Route::resource('vendor/blogtag', BlogTagController::class);
     
     Route::get('vendor/orders/canceled', [OrderController::class, 'canceledOrders'])->name('orders.canceled');
     Route::get('vendor/orders/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');

@@ -29,9 +29,22 @@ class FrontendController extends Controller
     public function detail($slug): View
     {
         // Fetch the product by slug
-        $relatedProduct = Product::where('slug', $slug)->firstOrFail();
+        // $relatedProduct = Product::where('slug', $slug)->firstOrFail();
+        // // Fetch related products from the same category or tags
+        $product = Product::where('slug', $slug)->with(['categories', 'variations', 'tags'])->firstOrFail();
+        $relatedProducts = Product::whereHas('categories', function ($query) use ($product) {
+            $query->whereIn('categories.id', $product->categories->pluck('id'));
+        })
+        ->orWhereHas('tags', function ($query) use ($product) {
+            $query->whereIn('tags.id', $product->tags->pluck('id'));
+        })
+        ->where('products.id', '!=', $product->id)
+        ->inRandomOrder()
+        ->take(4)
+        ->get();
         $attributes = Attribute::with('values')->get();
-        return view('frontend.detail', compact('relatedProduct','attributes'));
+        
+        return view('frontend.detail', compact('product','relatedProducts','attributes'));
     }
     public function contact(): View
     {

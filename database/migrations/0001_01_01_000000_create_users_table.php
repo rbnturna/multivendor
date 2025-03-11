@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('region')->default('india');
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
+            $table->string('avatar')->nullable();
+            $table->date('email_verified_at')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });

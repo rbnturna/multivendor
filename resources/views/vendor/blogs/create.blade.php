@@ -1,4 +1,5 @@
 @extends('vendor.layouts.app')
+@section('title', 'Create Blog')
 
 @section('content')
 <div class="conatiner-fluid content-inner mt-n5 py-0">
@@ -72,13 +73,16 @@
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label class="form-label" for="description">Description:</label>
-                                        <textarea
+                                        <input type="hidden" name="description" id="description" value="{{ old('description') }}">
+                                        <div id="editor">{!! old('description') !!}</div>
+               
+                                        <!-- <textarea
                                             name="description"
                                             type="text"
                                             rows="4" cols="50"
                                             class="form-control @error('description') is-invalid @enderror"
                                             id="description"
-                                            placeholder="Description"></textarea>
+                                            placeholder="Description"></textarea> -->
                                         @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -171,6 +175,67 @@
         $( '#select-field-tags' ).select2( {
             theme: 'bootstrap-5'
         } );
+    });
+</script>
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'font': [] }, { 'size': [] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'script': 'super' }, { 'script': 'sub' }],
+                [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                [{ 'direction': 'rtl' }, { 'align': [] }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ],
+            imageResize: {
+                displaySize: true
+            }
+        }
+    });
+
+    quill.on('text-change', function() {
+        document.getElementById('description').value = quill.root.innerHTML;
+    });
+
+    function uploadImage(file) {
+        var formData = new FormData();
+        formData.append('image', file);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route('vendor.blog.upload') }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                var range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', result.url);
+            }
+        });
+    }
+
+    quill.getModule('toolbar').addHandler('image', () => {
+        var input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = () => {
+            var file = input.files[0];
+            if (file) {
+                uploadImage(file);
+            }
+        };
     });
 </script>
 @endpush

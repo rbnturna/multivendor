@@ -60,7 +60,7 @@
                                             <label class="form-label">Variation</label>
                                             <select class="form-select variation-select" name="items[{{ $index }}][variation_id]">
                                                 <option value="">No Variation</option>
-                                                @if ($item->product->variations)
+                                                @if ($product->variations)
                                                     @foreach ($item->product->variations as $variation)
                                                         <option value="{{ $variation->id }}" 
                                                             {{ $item->variation_id == $variation->id ? 'selected' : '' }}>
@@ -72,6 +72,10 @@
                                         </div>
                                         <div class="col-md-2">
                                             <label class="form-label">Quantity</label>
+                                            <input type="number" class="form-control" name="items[{{ $index }}][quantity]" value="{{ $item->quantity }}" min="1" required>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Price</label>
                                             <input type="number" class="form-control" name="items[{{ $index }}][quantity]" value="{{ $item->quantity }}" min="1" required>
                                         </div>
                                         <div class="col-md-2">

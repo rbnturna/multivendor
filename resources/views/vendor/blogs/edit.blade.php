@@ -1,4 +1,5 @@
 @extends('vendor.layouts.app')
+@section('title', 'Edit Blog')
 
 @section('content')
 <div class="conatiner-fluid content-inner mt-n5 py-0">
@@ -13,7 +14,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Edit Blogs</h4>
+                                <h4 class="card-title">Edit Blog</h4>
                             </div>
                         </div>
                         <div class="card-body">
@@ -25,7 +26,7 @@
 
                                         <input
                                             name="title"
-                                            value="{{$blog->name}}"
+                                            value="{{$blog->title}}"
                                             type="text"
                                             class="form-control @error('title') is-invalid @enderror "
                                             id="title"
@@ -67,13 +68,16 @@
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label class="form-label" for="description">Description:</label>
-                                        <textarea
+                                        <input type="hidden" name="description" id="description" value="{{ $blog->description }}">
+                                        <div id="editor">{!! $blog->description !!}</div>
+               
+                                        <!-- <textarea
                                             name="description"
                                             type="text"
                                             rows="4" cols="50"
                                             class="form-control @error('description') is-invalid @enderror"
                                             id="description"
-                                            placeholder="Description">{{$blog->description}}</textarea>
+                                            placeholder="Description">{{$blog->description}}</textarea> -->
                                         @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -155,31 +159,23 @@
 @endsection
 
 @push('styles')
-<!-- <style>
-        body {
-            background-color: #f8f9fa;
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script> -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+<style>
+.ql-editor iframe {
+            width: 100%;
         }
-        h1 {
-            color: #007bff;
-        }
-    </style> -->
+  </style>
 @endpush
 
 @push('scripts')
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
+<!-- <script src="https://unpkg.com/quill-video-resize@3.0.0/dist/quill-video-resize.min.js"></script> -->
 <script>
-    // $(document).ready(function () {
-    //     $('#productTable').DataTable({
-    //         // DataTables initialization options
-    //         responsive: true,
-    //         autoWidth: false,
-    //         lengthChange: true,
-    //         pageLength: 10,
-    //         ordering: true,
-    //         columnDefs: [
-    //             { orderable: false, targets: [6] } // Disable ordering for Actions column
-    //         ]
-    //     });
-    // });
+
     $(document).ready(function() {
         $('#select-field-caterory').select2({
             theme: 'bootstrap-5'
@@ -188,33 +184,54 @@
             theme: 'bootstrap-5'
         });
     });
+   
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'font': [] }, { 'size': [] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'script': 'super' }, { 'script': 'sub' }],
+                [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                [{ 'direction': 'rtl' }, { 'align': [] }],
+                ['link', 'image', 'video'],
+                ['clean']
 
-    // function deleteproduct(productId) {
-    //     if (confirm("Are you sure you want to delete this Variant?")) {
-    //         // Replace with your delete endpoint logic
+            ],
+            imageResize: {
+                displaySize: true,
+                
+                modules: [ 'Resize', 'DisplaySize', 'Toolbar' ],
+            },
+            
+        }
+    });
 
-    //         $.ajax({
-    //             url: "{{ route('vendor.products.variations.destroy', '') }}/" + productId, // Add variation ID to the URL
-    //             type: "DELETE",
-    //             data: {
-    //                 _token: "{{ csrf_token() }}" // Pass the CSRF token
-    //             },
-    //             success: function(response) {
-    //                 console.log(response);
+    quill.on('text-change', function() {
+        document.getElementById('description').value = quill.root.innerHTML;
+    });
 
-    //                 alert(response);
-    //                 // Optionally remove the deleted row or refresh the table
-    //                 $("#variation-row-" + productId).remove();
-    //                 // } else {
-    //                 //     alert("Failed to delete the variation. Please try again.");
-    //                 // }
-    //             },
-    //             error: function(xhr) {
-    //                 alert("An error occurred: " + xhr.responseText);
-    //             }
-    //         });
-    //         // alert("Variant " + productId + " deleted successfully.");
-    //     }
-    // }
+    function uploadImage(file) {
+        var formData = new FormData();
+        formData.append('image', file);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route('vendor.blog.upload') }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                var range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', result.url);
+            }
+        });
+    }
+
+
+    
 </script>
 @endpush

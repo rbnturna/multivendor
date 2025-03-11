@@ -132,6 +132,21 @@ class BlogController extends Controller
         //return response()->json(['message' => 'Product updated successfully', 'product' => $blog]);
     }
 
+
+    
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads', $filename, 'public');
+
+            return response()->json(['success' => true, 'url' => Storage::url($filePath)]);
+        }
+
+        return response()->json(['success' => false]);
+    }
+
     /**
      * Remove the specified product from the database.
      */

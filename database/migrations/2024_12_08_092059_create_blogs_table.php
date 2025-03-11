@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable(); // Detailed description
             $table->text('short_description')->nullable(); // Short description
             $table->boolean('is_active')->default(true); // Active/inactive status
+            $table->boolean('is_featured')->default(false); // Active/inactive status
             $table->unsignedBigInteger('vendor_id')->nullable(); // Foreign key for vendor
             $table->unsignedInteger('views')->default(0); // Number of views
             $table->timestamps(); 

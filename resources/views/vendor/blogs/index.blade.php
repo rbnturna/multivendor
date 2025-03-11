@@ -1,4 +1,5 @@
 @extends('vendor.layouts.app')
+@section('title', 'Blogs List')
 
 @section('content')
 <div class="container-fluid content-inner mt-n5 py-0">

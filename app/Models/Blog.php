@@ -21,6 +21,7 @@ class Blog extends Model
         'description',
         'short_description',
         'is_active',
+        'is_featured',
         'vendor_id',
         'views',
     ];
