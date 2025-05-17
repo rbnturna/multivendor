@@ -29,30 +29,88 @@
             </div>
             <div class="bg-light p-5 mb-5">
                 <h4 class="mb-4">Order Details</h4>
-                <p><strong>Billing Address:</strong></p>
-                <p>{{ $order->first_name }} {{ $order->last_name }}</p>
-                <p>{{ $order->address1 }}</p>
-                @if($order->address2)
-                    <p>{{ $order->address2 }}</p>
-                @endif
-                <p>{{ $order->city }}, {{ $order->state }} {{ $order->zip }}</p>
-                <p>{{ $order->country }}</p>
-                <p><strong>Email:</strong> {{ $order->email }}</p>
-                <p><strong>Phone:</strong> {{ $order->phone }}</p>
+                <div class="row">
+                    <div class="col-md-4" style="border: 1px solid #ddd; padding: 15px; line-height: 1.6;">
+                        <p><strong>Billing Address:</strong></p>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Name:</strong></span>
+                            <span>{{ $order->first_name }} {{ $order->last_name }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Address:</strong></span>
+                            <span>{{ $order->address1 }}</span>
+                        </div>
+                        @if($order->address2)
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Address 2:</strong></span>
+                            <span>{{ $order->address2 }}</span>
+                        </div>
+                        @endif
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>City Address:</strong></span>
+                            <span>{{ $order->city }}, {{ $order->state }} {{ $order->zip }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Country:</strong></span>
+                            <span>{{ $order->country }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Email:</strong></span>
+                            <span>{{ $order->email }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Phone:</strong></span>
+                            <span>{{ $order->phone }}</span>
+                        </div>
+                    </div>
 
-                @if($order->shipping_first_name)
-                    <h4 class="mt-4 mb-4">Shipping Address</h4>
-                    <p>{{ $order->shipping_first_name }} {{ $order->shipping_last_name }}</p>
-                    <p>{{ $order->shipping_address1 }}</p>
-                    @if($order->shipping_address2)
-                        <p>{{ $order->shipping_address2 }}</p>
+                    @if($order->shipping_first_name)
+                    <div class="col-md-4" style="border: 1px solid #ddd; padding: 15px; line-height: 1.6;">
+                        <p><strong>Shipping Address:</strong></p>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Name:</strong></span>
+                            <span>{{ $order->shipping_first_name }} {{ $order->shipping_last_name }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Address:</strong></span>
+                            <span>{{ $order->shipping_address1 }}</span>
+                        </div>
+                        @if($order->shipping_address2)
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Address 2:</strong></span>
+                            <span>{{ $order->shipping_address2 }}</span>
+                        </div>
+                        @endif
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>City Address:</strong></span>
+                            <span>{{ $order->shipping_city }}, {{ $order->shipping_state }} {{ $order->shipping_zip }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Shipping Country:</strong></span>
+                            <span>{{ $order->shipping_country }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Email:</strong></span>
+                            <span>{{ $order->shipping_email }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Phone:</strong></span>
+                            <span>{{ $order->shipping_phone }}</span>
+                        </div>
+                    </div>
                     @endif
-                    <p>{{ $order->shipping_city }}, {{ $order->shipping_state }} {{ $order->shipping_zip }}</p>
-                    <p>{{ $order->shipping_country }}</p>
-                    <p><strong>Email:</strong> {{ $order->shipping_email }}</p>
-                    <p><strong>Phone:</strong> {{ $order->shipping_phone }}</p>
-                @endif
 
+                    <div class="col-md-4" style="border: 1px solid #ddd; padding: 15px; line-height: 1.6;">
+                        <p><strong>Order Summary:</strong></p>
+                        <p><strong>Subtotal:</strong> ${{ $order->subtotal }}</p>
+                        <p><strong>Discount:</strong> -${{ $order->discount }}</p>
+                        <p><strong>Shipping Cost:</strong> ${{ $order->shipping_cost }}</p>
+                        <p><strong>Total:</strong> ${{ $order->total }}</p>
+                    </div>
+                </div>
+            <!-- </div>
+
+            <div class="bg-light p-5 mb-5"> -->
                 <h4 class="mt-4 mb-4">Order Items</h4>
                 <table class="table table-bordered">
                     <thead>
@@ -74,12 +132,6 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                <h4 class="mt-4 mb-4">Order Summary</h4>
-                <p><strong>Subtotal:</strong> ${{ $order->subtotal }}</p>
-                <p><strong>Discount:</strong> -${{ $order->discount }}</p>
-                <p><strong>Shipping Cost:</strong> ${{ $order->shipping_cost }}</p>
-                <p><strong>Total:</strong> ${{ $order->total }}</p>
             </div>
         </div>
     </div>

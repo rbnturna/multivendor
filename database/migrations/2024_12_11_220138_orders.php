@@ -14,7 +14,7 @@ return new class extends Migration
                 // Migration for Orders Table
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('portal_id')->nullable();
             $table->unsignedBigInteger('handler_id')->nullable();
             $table->string('status')->default('pending');
@@ -61,7 +61,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('variation_id');
+            $table->unsignedBigInteger('variation_id')->nullable();
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
             $table->timestamps();

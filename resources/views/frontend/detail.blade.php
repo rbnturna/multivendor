@@ -70,7 +70,10 @@
                                         <li class="list-group-item d-flex align-items-center">
                                             <div class="d-flex align-items-center w-100">
                                                 @if(!empty($variation->image))<img height="20px" src="{{ asset('storage/'.$variation->image) }}" class="mr-2"> @endif
-                                                {{ implode(', ', $variation->attributes) }}
+                                                @php
+                                                    $attributes = is_string($variation->attributes) ? json_decode($variation->attributes, true) : $variation->attributes;
+                                                @endphp
+                                                {{ implode(', ', $attributes) }}
                                                 <div class="ml-auto d-flex align-items-center">
                                                     <input type="radio" name="variation_id" value="{{ $variation->id }}" class="form-check-input variation-checkbox" style="width: 1.5em; height: 1.5em; margin-bottom: 2px;">
                                                 </div>

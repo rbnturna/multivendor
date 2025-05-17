@@ -12,7 +12,28 @@ class FrontendController extends Controller
 {
     public function home(): View
     {
-        return view('frontend/home');
+        // Fetch categories
+        $categories = \App\Models\Category::withCount('products')
+        ->inRandomOrder()
+        ->take(8) // Limit to 8 featured products
+
+        ->get();
+    
+        // Fetch featured products
+        $featuredProducts = \App\Models\Product::where('is_featured', true)
+            ->with('categories')
+            ->inRandomOrder()
+            ->take(8) // Limit to 8 featured products
+            ->get();
+    
+        // Fetch recent products
+        $recentProducts = \App\Models\Product::orderBy('created_at', 'desc')
+            ->with('categories')
+            ->inRandomOrder()
+            ->take(8) // Limit to 8 recent products
+            ->get();
+    
+        return view('frontend.home', compact('categories', 'featuredProducts', 'recentProducts'));
     }
 
     public function product(): View
@@ -57,5 +78,51 @@ class FrontendController extends Controller
     public function cart(): View
     {
         return view('frontend/cart');
+    }
+
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        // Search for products by name or tags
+        $products = \App\Models\Product::where('name', 'LIKE', "%{$query}%")
+            ->orWhereHas('tags', function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%");
+            })
+            ->with('tags')
+            ->take(10) // Limit results
+            ->get();
+
+        // Search for categories by name
+        $categories = \App\Models\Category::where('name', 'LIKE', "%{$query}%")
+            ->take(10) // Limit results
+            ->get();
+
+        return response()->json([
+            'products' => $products,
+            'categories' => $categories,
+        ]);
+    }
+
+
+     /**
+     * Display the Privacy Policy page.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function privacy()
+    {
+        return view('frontend.privacy');
+    }
+
+    /**
+     * Display the Terms & Conditions page.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function terms()
+    {
+        return view('frontend.terms');
     }
 }

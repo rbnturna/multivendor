@@ -9,6 +9,7 @@
         "php": "^8.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
+        "razorpay/razorpay": "^2.9",
         "spatie/laravel-permission": "^6.10",
         "stripe/stripe-php": "^16.6"
     },
@@ -28,7 +29,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/CategoryHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

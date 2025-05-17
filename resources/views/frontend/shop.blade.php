@@ -60,8 +60,13 @@
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <div>
-                            <button class="btn btn-sm btn-light"><i class="fa fa-th-large"></i></button>
-                            <button class="btn btn-sm btn-light ml-2"><i class="fa fa-bars"></i></button>
+                        <form action="" method="GET" class="d-flex">
+                            <input type="text" name="query" id="search-input" class="form-control" placeholder="Search products..." value="{{ request('query') }}">
+                            <button type="submit" class="btn btn-primary ml-2"><i class="fa fa-search"></i></button>
+                        </form>
+
+                            <!-- <button class="btn btn-sm btn-light"><i class="fa fa-th-large"></i></button> -->
+                            <!-- <button class="btn btn-sm btn-light ml-2"><i class="fa fa-bars"></i></button> -->
                         </div>
                         <div class="ml-2">
                             <div class="btn-group">
@@ -72,14 +77,14 @@
                                     <a class="dropdown-item" href="#">Best Rating</a>
                                 </div>
                             </div>
-                            <div class="btn-group ml-2">
+                            <!-- <div class="btn-group ml-2">
                                 <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">Showing</button>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" href="#">10</a>
                                     <a class="dropdown-item" href="#">20</a>
                                     <a class="dropdown-item" href="#">30</a>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -90,13 +95,12 @@
                         <div class="product-img position-relative overflow-hidden">
                             <img class="img-fluid w-100" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
                             <div class="product-action">
-                                <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-shopping-cart"></i></a>
-                                <a class="btn btn-outline-dark btn-square" href="#"><i class="far fa-heart"></i></a>
-                                <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-sync-alt"></i></a>
-                                <a class="btn btn-outline-dark btn-square" href="{{ route('product.detail', ['slug' => $product->slug]) }}"><i class="fa fa-search"></i></a>
+                                <a class="btn btn-outline-dark btn-square add-to-cart" href="javascript:void(0);" data-product-id="{{ $product->id }}"><i class="fa fa-shopping-cart"></i></a>
+                                <a class="btn btn-outline-dark btn-square add-to-wishlist" href="javascript:void(0);" data-product-id="{{ $product->id }}"><i class="far fa-heart"></i></a>
+                                <a class="btn btn-outline-dark btn-square add-to-search" href="javascript:void(0)" data-product-keyword="{{ $product->name }}"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
-                        <div class="text-center py-4">
+                        <div class="text-center py-4" onclick="window.location.href='{{ route('product.detail', ['slug' => $product->slug]) }}'" style="cursor: pointer;">
                             <a class="h6 text-decoration-none text-truncate" href="{{ route('product.detail', ['slug' => $product->slug]) }}">{{ $product->name }}</a>
                             <div class="d-flex align-items-center justify-content-center mt-2">
                                 <h5>₹{{ $product->selling_price }}</h5>
@@ -123,3 +127,70 @@
 <!-- Shop End -->
 
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // alert('Hello');
+        $('.add-to-search').on('click', function() {
+            
+            const productKeyword = $(this).data('product-keyword');
+            $('#search-input').val(productKeyword);
+            $('#search-input').focus(); // Trigger the input event to show results
+            $('#search-input').trigger('keyup');
+        });
+        $('.add-to-wishlist').on('click', function() {
+            const productId = $(this).data('product-id');
+
+            $.ajax({
+                url: '{{ route('wishlist.add') }}',
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.message) {
+                       
+                        $('.global-wishlist-count').html(response.total_items);
+                        toastr.success(response.message); // Replace with a toast notification for better UX
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        // Add to Cart functionality
+        $('.add-to-cart').on('click', function() {
+            const productId = $(this).data('product-id');
+
+            $.ajax({
+                url: '{{ route('cart.add') }}', // Ensure this route is defined in your routes file
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    quantity: 1, // Default quantity
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.message) {
+                        // Update the cart count (if applicable)
+                        // alert(response.total_items);
+                        $('.global-cart-count').html(response.total_items);
+                        toastr.success(response.message); // Replace with a toast notification for better UX
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    toastr.error('Failed to add product to cart. Please try again.');
+                }
+            });
+        });
+
+
+       
+    });
+</script>
+@endpush

@@ -39,11 +39,15 @@
                     @foreach($cartItems as $item)
                         <tr data-id="{{ $item->id }}">
                             <td class="align-middle">
-                                <img src="{{ $item->product->image }}" alt="" style="width: 50px;">
+                                <img src="{{ asset('storage/'.$item->product->image) }}" alt="" style="width: 50px;">
                                 {{ $item->product->name }}
                                 @if($item->variation)
                                     <br>
-                                    <small>{{ implode(', ', $item->variation->attributes) }}</small>
+                                    @php
+                                                    $attributes = is_string($item->variation->attributes) ? json_decode($item->variation->attributes, true) : $item->variation->attributes;
+                                                @endphp
+                                                
+                                    <small>{{ implode(', ', $attributes) }}</small>
                                 @endif
                             </td>
                             <td class="align-middle">${{ $item->variation ? $item->variation->price : $item->product->price }}</td>
@@ -115,6 +119,8 @@
 
 @push('scripts')
 <script>
+
+
     $(document).ready(function() {
         // Quantity buttons functionality
         $('.btn-plus, .btn-minus').on('click', function(e) {

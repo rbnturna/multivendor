@@ -10,6 +10,8 @@ use App\Models\ShippingCost;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 
 use Stripe\Stripe;
 use Stripe\Charge;
@@ -33,7 +35,9 @@ class CartController extends Controller
             ['quantity' => \DB::raw('quantity + ' . $request->quantity)]
         );
 
-        return response()->json(['message' => 'Product added to cart', 'cart' => $cart]);
+        $totalItems = Cart::where('user_id', auth()->id())->sum('quantity');
+
+        return response()->json(['message' => 'Product added to cart', 'cart' => $cart, 'total_items' => $totalItems]);
     }
 
     public function removeFromCart($id)
@@ -83,6 +87,9 @@ class CartController extends Controller
 public function viewCart(Request $request)
 {
     $cartItems = Cart::where('user_id', auth()->id())->with(['product', 'variation'])->get();
+    // if(count($cartItems)<1){
+        // return redirect()->route('home')->with('error','Please Add Products To cart before Proceed to Checkout');
+    // }
     $subtotal = $cartItems->sum(function ($item) {
         return ($item->variation ? $item->variation->price : $item->product->price) * $item->quantity;
     });
@@ -99,12 +106,21 @@ public function viewCart(Request $request)
     if ($request->ajax()) {
         return response()->json(compact('cartItems', 'subtotal', 'shippingCost', 'discount', 'total'));
     }else{
+        // return redirect()->route('home');
+        // return redirect()->route('home');
+        if(count($cartItems)<1){
+        Session::flash('error','Please Add Products To cart before Proceed to Checkout');
+        }
         return view('frontend.cart', compact('cartItems', 'subtotal', 'shippingCost', 'discount', 'total'));
     }
 }
 public function showCheckout()
 {
+    
     $cartItems = Cart::where('user_id', auth()->id())->with(['product', 'variation'])->get();
+    if(count($cartItems)<1){
+        return redirect()->route('home')->with('error','Please Add Products To cart before Proceed to Checkout');
+    }
     $subtotal = $cartItems->sum(function ($item) {
         return ($item->variation ? $item->variation->price : $item->product->price) * $item->quantity;
     });
@@ -120,6 +136,9 @@ public function showCheckout()
 
     public function checkout(Request $request)
     {
+        // dd($request->all());
+        
+        
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -131,8 +150,8 @@ public function showCheckout()
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'payment_method' => 'required|string|in:paypal,directcheck,banktransfer,stripe',
-            'password' => 'nullable|required_if:create_account,on|string|min:8|confirmed',
+            'payment_method' => 'required|string|in:razorpay,stripe',
+            'password' => 'nullable|sometimes|required_if:create_account,1|string|min:8|confirmed',
             'shipping_first_name' => 'nullable|string|max:255',
             'shipping_last_name' => 'nullable|string|max:255',
             'shipping_email' => 'nullable|email|max:255',
@@ -144,8 +163,9 @@ public function showCheckout()
             'shipping_state' => 'nullable|string|max:255',
             'shipping_zip' => 'nullable|string|max:10',
             'stripeToken' => 'required_if:payment_method,stripe',
+            'razorpay_payment_id' => 'required_if:payment_method,razorpay',
         ]);
-
+        // dd($request->create_account);
         if ($request->create_account) {
             $user = User::create([
                 'name' => $request->first_name . ' ' . $request->last_name,
@@ -155,6 +175,8 @@ public function showCheckout()
 
             auth()->login($user);
         }
+
+
 
         $cartItems = Cart::where('user_id', auth()->id())->with(['product', 'variation'])->get();
         $subtotal = $cartItems->sum(function ($item) {
@@ -180,6 +202,24 @@ public function showCheckout()
                         'order_id' => uniqid(),
                     ],
                 ]);
+            } catch (\Exception $e) {
+                return back()->withErrors(['error' => $e->getMessage()]);
+            }
+        }
+
+        // $request->validate([
+        //     // ...existing validation rules...
+        //     'razorpay_payment_id' => 'required_if:payment_method,razorpay',
+        // ]);
+    
+        // Handle Razorpay Payment
+        if ($request->payment_method == 'razorpay') {
+            try {
+                $api = new \Razorpay\Api\Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+                $payment = $api->payment->fetch($request->razorpay_payment_id);
+                if (!$payment || $payment->status !== 'captured') {
+                    return back()->withErrors(['error' => 'Payment failed. Please try again.']);
+                }
             } catch (\Exception $e) {
                 return back()->withErrors(['error' => $e->getMessage()]);
             }
@@ -212,6 +252,8 @@ public function showCheckout()
             'discount' => $discount,
             'shipping_cost' => $shippingCost,
             'total' => $total,
+            'total_price' => $total,
+            
         ]);
 
         foreach ($cartItems as $item) {
@@ -228,18 +270,21 @@ public function showCheckout()
         session()->forget('coupon');
         $encryptedOrderId = Crypt::encryptString($order->id);
 
-        return redirect()->route('order.success', ['order' => $order->id])->with('success', 'Order placed successfully.');
+        return redirect()->route('order.success', ['order' => $encryptedOrderId])->with('success', 'Order placed successfully.');
     }
 
     public function showOrderSuccess($encryptedOrderId)
     {
-        try {
+        // try {
             $orderId = Crypt::decryptString($encryptedOrderId);
-        } catch (\Exception $e) {
-            return redirect()->route('home')->withErrors(['error' => 'Invalid order ID.']);
-        }
+        // } catch (\Exception $e) {
+        //     return redirect()->route('home')->withErrors(['error' => 'Invalid order ID.']);
+        // }
     
-        $order = Order::with('items.product', 'items.variation')->findOrFail($orderId);
+        $order = Order::with(['items' => function ($query) {
+            $query->with(['product', 'variation']);
+        }])->findOrFail($orderId);
+        // dd($order);
     
         return view('frontend.order-success', compact('order'));
     }

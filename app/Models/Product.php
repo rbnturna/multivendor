@@ -70,4 +70,8 @@ class Product extends Model
     {
         return $this->belongsToMany(Tag::class, 'product_tag');
     }
+    public function isAvailable()
+    {
+        return $this->stock > 0;
+    }
 }

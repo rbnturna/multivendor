@@ -90,6 +90,66 @@
     <script src="{{ asset('frontend/js/main.js') }}"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    // toastr.error(11111111111111);
+    @if (Session::has('error'))
+        toastr.error("{{ Session::get('error') }}");
+    @endif
+
+    // filepath: /c:/xampp/htdocs/multi-vendor/public/frontend/js/script.js
+function performSearch(query) {
+    if (query.length < 2) {
+        document.getElementById('search-results').style.display = 'none';
+        return;
+    }
+
+    fetch(`/search?query=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = '';
+
+            if (data.products.length === 0 && data.categories.length === 0) {
+                resultsContainer.innerHTML = '<p class="p-2 text-muted">No results found</p>';
+            } else {
+                data.products.forEach(product => {
+                    resultsContainer.innerHTML += `
+                        <a href="/product/${product.slug}" class="d-block p-2 border-bottom text-dark">
+                            <img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover;" class="mr-2">
+                            ${product.name}
+                        </a>
+                    `;
+                });
+
+                data.categories.forEach(category => {
+                    resultsContainer.innerHTML += `
+                        <a href="/category/${category.slug}" class="d-block p-2 border-bottom text-dark">
+                            <i class="fa fa-folder mr-2"></i> ${category.name}
+                        </a>
+                    `;
+                });
+            }
+
+            resultsContainer.style.display = 'block';
+        })
+        .catch(error => console.error('Error:', error));
+}
+</script>
+<style>
+    .search-popup {
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .search-popup a {
+        text-decoration: none;
+    }
+
+    .search-popup a:hover {
+        background-color: #f8f9fa;
+    }
+</style>
 </body>
 
 </html>

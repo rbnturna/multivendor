@@ -22,6 +22,7 @@ use App\Http\Controllers\Vendor\BlogTagController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\WishlistController;
 
 
 // use App\Http\Controllers\SuperAdmin\SuperAdminController;
@@ -97,6 +98,8 @@ Route::middleware(['auth', 'role:superadmin'])->name('superadmin.')->group(funct
 // })->middleware(['auth', 'role:vendor'])->name('vendor.home');
 
 Route::get('/', [FrontendController::class, 'home'])->name('home');
+Route::get('/privacy', [FrontendController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [FrontendController::class, 'terms'])->name('terms');
 // Route::get('/product/{slug}', [FrontendController::class, 'index'])->name('home');
 Route::get('/product', [FrontendController::class, 'product'])->name('shop');
 Route::get('/product/{slug}', [FrontendController::class, 'detail'])->name('product.detail'); // Fix here
@@ -104,8 +107,16 @@ Route::get('/detail', [FrontendController::class, 'detail'])->name('detail');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
 // Route::get('/checkout', [FrontendController::class, 'checkout'])->name('checkout');
 Route::get('/checkout', [CartController::class, 'showCheckout'])->name('checkout.show');
-
+Route::get('/search', [FrontendController::class, 'search'])->name('search');
 // Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
+    Route::get('/wishlist/view', [WishlistController::class, 'viewWishlist'])->name('wishlist.view');
+    Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
+    Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+    Route::post('/wishlist/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('wishlist.moveToCart');
+});
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.show');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
